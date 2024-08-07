@@ -27,6 +27,8 @@ LEVELS OF NETWORKING
 - Then at the lowest level of software, we are working with the OS network stack and IP addresses.
 - Hardware.
 
+- Daemon: program which runs in the background (Cros, OS related C++ which express framework is built off of).
+
 - Using curl for POST requests:
   curl -X POST http://localhost:3001/process-video \
    -H "Content-Type: application/json" \
@@ -37,3 +39,10 @@ More JS in Node context:
 - Call back is the same as route handlers and are the function in the perameter of the other funtion.
 - Not always async unless attatched with a promise or other callbacks.
 - Passed into Node JS's single threded event loop.
+
+- Docker: https://docs.docker.com/guides/docker-overview/
+- Dockerfile: https://docs.docker.com/reference/dockerfile/
+- Docker CLI: https://docs.docker.com/reference/cli/docker/container/cp/
+- Docker API: https://docs.docker.com/engine/api/sdk/
+- Dokerd: the docker daemon which runs in the background allowing you to images.
+  - CLI: https://docs.docker.com/reference/cli/dockerd/

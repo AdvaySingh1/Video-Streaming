@@ -12,9 +12,9 @@ const url = "http://localhost";
 
 app.post("/process-video", (req, res) => {
   // Get the path of the input video file from the request body
-  const inputFilePath = path.join(__dirname, req.body.inputFilePath);
+  const inputFilePath = path.join(__dirname, "..", req.body.inputFilePath);
   //console.log(inputFilePath);
-  const outputFilePath = path.join(__dirname, req.body.outputFilePath);
+  const outputFilePath = path.join(__dirname, "..", req.body.outputFilePath);
 
   // Check if the input file path is defined
   if (!inputFilePath || !outputFilePath) {
@@ -40,5 +40,7 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
+  let outputFilePath = path.join(__dirname, "..", "e");
+  console.log(outputFilePath);
   console.log(`Server running on ${url}:${port}`);
 });
