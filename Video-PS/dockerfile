@@ -1,31 +1,86 @@
-# development docker image
-# Base image. Can be FROM scratch but this excludes OS level dependencies.
-# Official node base image: https://hub.docker.com/_/node
-FROM node:18
+# # development docker image
+# # Base image. Can be FROM scratch but this excludes OS level dependencies.
+# # Official node base image: https://hub.docker.com/_/node
+# FROM node:18
 
-# Set the working dir for application. Used for pulling from DAEMON
+# # Set the working dir for application. Used for pulling from DAEMON
+# WORKDIR /app
+
+# # Install ffmpeg (depends on the OS). Everything on UNIX.
+# RUN apt-get update && apt-get install -y ffmpeg
+
+# # Copy the package.json and package-lock.json into working dir for dependencies
+# COPY package*.json ./
+
+# # Download the dependencies
+# RUN npm install
+# # Copy current app source into the docker image
+# COPY . .
+
+# # Make port 3001 available outside this container
+# EXPOSE 3001
+
+# # Set the command to be executed when running the container
+# CMD ["npm", "run", "dev"]
+
+
+
+
+# production docker image.
+# Docker images have two stages, build and production stage.
+
+
+# Stage 1: Build Stage
+
+# From base image of node 18. This image will be referenced as builder.
+FROM node:18 AS builder
+
+# App working dir for build stage
 WORKDIR /app
 
-# Install ffmpeg (depends on the OS). Everything on UNIX.
-RUN apt-get update && apt-get install -y ffmpeg
+# Copy the package and package lock json for dependencies
+COPY package*.json /app
 
-# Copy the package.json and package-lock.json into working dir for dependencies
-COPY package*.json ./
-
-# Download the dependencies
+# Install dependencies for build stage
 RUN npm install
-# Copy current app source into the docker image
+
+# Copy all files from current folder into app
 COPY . .
 
-# Make port 3001 available outside this container
+# build the js files into the TS files
+RUN npm run build
+
+# Stage 2: Production
+FROM node:18
+
+# Install ffmpeg (can do earlier but now the runtime dependencies come into play)
+RUN apt-get update && apt-get install -y ffmpeg
+
+# Define workdir for the production stage
+WORKDIR /app
+
+# Copy the package json file into production stage
+COPY package*.json ./
+
+# Only install dev dependencies from npm package
+RUN npm install --only=production
+
+# copy relavent data
+
+# dist file
+COPY --from=builder app/dist /app/dist
+
+# public files
+COPY --from=builder app/public /app/public 
+
+# hello.MOV (chage later)
+COPY --from=builder app/hello.MOV /app/hello.MOV
+
+# Expose port 3001 for production stage app
 EXPOSE 3001
 
-# Set the command to be executed when running the container
-CMD ["npm", "run", "dev"]
+# run npm serve in production stage image to make container
+CMD ["npm", "run", "serve"]
 
 
 
-
-
-
-# production docker image

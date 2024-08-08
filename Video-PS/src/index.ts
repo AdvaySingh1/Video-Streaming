@@ -7,7 +7,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 const url = "http://localhost";
 
 app.post("/process-video", (req, res) => {
@@ -36,11 +36,9 @@ app.post("/process-video", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(path.join(__dirname, "../public", "index.html"));
 });
 
 app.listen(port, () => {
-  let outputFilePath = path.join(__dirname, "..", "e");
-  console.log(outputFilePath);
   console.log(`Server running on ${url}:${port}`);
 });

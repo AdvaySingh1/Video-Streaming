@@ -1,0 +1,3 @@
+# don't want to copy over node_modules
+node_modules
+
