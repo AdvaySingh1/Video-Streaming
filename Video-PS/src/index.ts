@@ -2,15 +2,85 @@ import express from "express";
 import path from "path";
 import dotenv from "dotenv";
 import ffmpeg from "fluent-ffmpeg";
+import {
+  setupDirectories,
+  processVideo,
+  deleteRawVideo,
+  deleteProcessedVideo,
+  downloadRawVideo,
+  exportProcessedVideo,
+} from "./store";
 
+// config environment variables
 dotenv.config();
+
+// initialize the express application
 const app = express();
+// default to json middleware
 app.use(express.json());
+
+// set up directories for processing images
+setupDirectories();
 
 const port = process.env.PORT || 3001;
 const url = "http://localhost";
 
-app.post("/process-video", (req, res) => {
+// post endpoint accessed pub-sub is async
+app.post("/process-video", async (req, res) => {
+  // Endpoint will be accessed from pub-sub model.
+  // Reference: https://cloud.google.com/run/docs/tutorials/pubsub#run_pubsub_server-nodejs
+  let data;
+  // parse the data into JSON format
+  try {
+    // buffer creates temporary data from req.body.nessage.data.
+    // This is then converted into a string.
+    const message = Buffer.from(req.body.message.data, "base64").toString(
+      "utf8"
+    );
+    // Parse the data into JSON
+    data = JSON.parse(message);
+    if (!data.name) {
+      throw new Error("Invalid pub sub payload message.");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(400).send("Bad request: missing filename.");
+  }
+
+  const inputFileName = data.name;
+  const outputFileName = `processed-${inputFileName}`;
+
+  try {
+    // download processed video
+    await downloadRawVideo(inputFileName);
+
+    // process the file
+    processVideo(inputFileName, outputFileName);
+
+    // upload the processed video
+    await exportProcessedVideo(outputFileName);
+  } catch (err) {
+    // delete all the videos
+    await Promise.all([
+      deleteRawVideo(inputFileName),
+      deleteProcessedVideo(outputFileName),
+    ]);
+
+    // output the error message
+    console.error(err);
+    res.status(500).send(`Error in processing ${inputFileName}.`);
+  }
+
+  // delete all the videos
+  await Promise.all([
+    deleteRawVideo(inputFileName),
+    deleteProcessedVideo(outputFileName),
+  ]);
+
+  res.status(200).send("Processing finished successfully.");
+});
+
+app.post("/video-process", (req, res) => {
   // Get the path of the input video file from the request body
   const inputFilePath = path.join(__dirname, "..", req.body.inputFilePath);
   //console.log(inputFilePath);
