@@ -1,27 +1,27 @@
-# # development docker image
-# # Base image. Can be FROM scratch but this excludes OS level dependencies.
-# # Official node base image: https://hub.docker.com/_/node
-# FROM node:18
+# development docker image
+# Base image. Can be FROM scratch but this excludes OS level dependencies.
+# Official node base image: https://hub.docker.com/_/node
+FROM node:18
 
-# # Set the working dir for application. Used for pulling from DAEMON
-# WORKDIR /app
+# Set the working dir for application. Used for pulling from DAEMON
+WORKDIR /app
 
-# # Install ffmpeg (depends on the OS). Everything on UNIX.
-# RUN apt-get update && apt-get install -y ffmpeg
+# Install ffmpeg (depends on the OS). Everything on UNIX.
+RUN apt-get update && apt-get install -y ffmpeg
 
-# # Copy the package.json and package-lock.json into working dir for dependencies
-# COPY package*.json ./
+# Copy the package.json and package-lock.json into working dir for dependencies
+COPY package*.json ./
 
-# # Download the dependencies
-# RUN npm install
-# # Copy current app source into the docker image
-# COPY . .
+# Download the dependencies
+RUN npm install
+# Copy current app source into the docker image
+COPY . .
 
-# # Make port 3001 available outside this container
-# EXPOSE 3001
+# Make port 3001 available outside this container
+EXPOSE 3001
 
-# # Set the command to be executed when running the container
-# CMD ["npm", "run", "dev"]
+# Set the command to be executed when running the container
+CMD ["npm", "run", "dev"]
 
 
 
@@ -30,57 +30,57 @@
 # Docker images have two stages, build and production stage.
 
 
-# Stage 1: Build Stage
+# # Stage 1: Build Stage
 
-# From base image of node 18. This image will be referenced as builder.
-FROM node:18 AS builder
+# # From base image of node 18. This image will be referenced as builder.
+# FROM node:18 AS builder
 
-# App working dir for build stage
-WORKDIR /app
+# # App working dir for build stage
+# WORKDIR /app
 
-# Copy the package and package lock json for dependencies
-COPY package*.json /app
+# # Copy the package and package lock json for dependencies
+# COPY package*.json /app
 
-# Install dependencies for build stage
-RUN npm install
+# # Install dependencies for build stage
+# RUN npm install
 
-# Copy all files from current folder into app
-COPY . .
+# # Copy all files from current folder into app
+# COPY . .
 
-# build the js files into the TS files
-RUN npm run build
+# # build the js files into the TS files
+# RUN npm run build
 
-# Stage 2: Production
-FROM node:18
+# # Stage 2: Production
+# FROM node:18
 
-# Install ffmpeg (can do earlier but now the runtime dependencies come into play)
-RUN apt-get update && apt-get install -y ffmpeg
+# # Install ffmpeg (can do earlier but now the runtime dependencies come into play)
+# RUN apt-get update && apt-get install -y ffmpeg
 
-# Define workdir for the production stage
-WORKDIR /app
+# # Define workdir for the production stage
+# WORKDIR /app
 
-# Copy the package json file into production stage
-COPY package*.json ./
+# # Copy the package json file into production stage
+# COPY package*.json ./
 
-# Only install dev dependencies from npm package
-RUN npm install --only=production
+# # Only install dev dependencies from npm package
+# RUN npm install --only=production
 
-# copy relavent data
+# # copy relavent data
 
-# dist file
-COPY --from=builder app/dist /app/dist
+# # dist file
+# COPY --from=builder app/dist /app/dist
 
-# public files
-COPY --from=builder app/public /app/public 
+# # public files
+# COPY --from=builder app/public /app/public 
 
-# hello.MOV (chage later)
-COPY --from=builder app/hello.MOV /app/hello.MOV
+# # hello.MOV (chage later)
+# COPY --from=builder app/hello.MOV /app/hello.MOV
 
-# Expose port 3001 for production stage app
-EXPOSE 3001
+# # Expose port 3001 for production stage app
+# EXPOSE 3001
 
-# run npm serve in production stage image to make container
-CMD ["npm", "run", "serve"]
+# # run npm serve in production stage image to make container
+# CMD ["npm", "run", "serve"]
 
 
 
