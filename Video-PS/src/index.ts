@@ -20,6 +20,7 @@ const app = express();
 app.use(express.json());
 
 // set up directories for processing images
+// Needed for cloud run as it will turn off upon no requests (image with no container)
 setupDirectories();
 
 const port = process.env.PORT || 3001;
@@ -45,6 +46,7 @@ app.post("/process-video", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(400).send("Bad request: missing filename.");
+    return;
   }
 
   const inputFileName = data.name;
@@ -55,7 +57,7 @@ app.post("/process-video", async (req, res) => {
     await downloadRawVideo(inputFileName);
 
     // process the file
-    processVideo(inputFileName, outputFileName);
+    await processVideo(inputFileName, outputFileName);
 
     // upload the processed video
     await exportProcessedVideo(outputFileName);
@@ -69,6 +71,7 @@ app.post("/process-video", async (req, res) => {
     // output the error message
     console.error(err);
     res.status(500).send(`Error in processing ${inputFileName}.`);
+    return;
   }
 
   // delete all the videos
@@ -78,31 +81,6 @@ app.post("/process-video", async (req, res) => {
   ]);
 
   res.status(200).send("Processing finished successfully.");
-});
-
-app.post("/video-process", (req, res) => {
-  // Get the path of the input video file from the request body
-  const inputFilePath = path.join(__dirname, "..", req.body.inputFilePath);
-  //console.log(inputFilePath);
-  const outputFilePath = path.join(__dirname, "..", req.body.outputFilePath);
-
-  // Check if the input file path is defined
-  if (!inputFilePath || !outputFilePath) {
-    return res.status(400).send("Bad Request: Missing file path");
-  }
-
-  // Create the ffmpeg command
-  ffmpeg(inputFilePath)
-    .outputOptions("-vf", "scale=ceil(iw/2)*2:360") // 360p
-    .on("end", function () {
-      console.log("Processing finished successfully");
-      res.status(200).send("Processing finished successfully");
-    })
-    .on("error", function (err: any) {
-      console.log("An error occurred: " + err.message);
-      res.status(500).send("An error occurred: " + err.message);
-    })
-    .save(outputFilePath);
 });
 
 app.get("/", (req, res) => {

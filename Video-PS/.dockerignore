@@ -1,3 +1,6 @@
 # don't want to copy over node_modules
 node_modules
 
+
+# if you want the host to have their own port
+.env

@@ -13,8 +13,8 @@ const storage = new Storage(); // storage object in heap. Self delition operator
 // });
 
 // Cloud Storage Buckets
-const loadBucketName = "VL-Bucket625";
-const processedBucketName = "PL-Bucker625";
+const loadBucketName = "vl-bucket625";
+const processedBucketName = "pl-bucket625";
 
 // Local directories during proccessing
 const rawVideoPath = "./raw-videos";
@@ -39,7 +39,7 @@ export function processVideo(
 ) {
   const inputFilePath = `${rawVideoPath}/${rawVideoName}`;
   const outputFilePath = `${proVideoPath}/${proccessedVideoName}`;
-  new Promise<void>((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     // Create the ffmpeg command
     ffmpeg(inputFilePath)
       .outputOptions("-vf", "scale=ceil(iw/2)*2:360") // 360p
@@ -50,7 +50,7 @@ export function processVideo(
       })
       .on("error", function (err: any) {
         console.log("An error occurred: " + err.message);
-        reject();
+        reject(err);
       })
       .save(outputFilePath);
   });
@@ -85,7 +85,7 @@ export async function exportProcessedVideo(proccessedVideoName: string) {
 
   console.log(`${processedVideoPath} uploaded to gs://${processedBucketName}.`);
 
-  // make publicly readeble
+  // make publicly readeble (Subject to ACLs).
   await storage
     .bucket(processedBucketName)
     .file(proccessedVideoName)
