@@ -33,6 +33,8 @@ LEVELS OF NETWORKING
 
 - Daemon: program which runs in the background (Cros, OS related C++ which express framework is built off of).
 
+  - SSH uses Daemon to connect to other server. Ex. SSH into Github Repository.
+
 - Using curl for POST requests:
   curl -X POST http://localhost:3001/process-video \
    -H "Content-Type: application/json" \
