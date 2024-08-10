@@ -2,12 +2,14 @@ Hello World.
 
 Tech Stack:
 
-- FFmpeg: Video Processing
-- Node JS (look at [package.json](Video-PS/package.json)) for versioning and dependencies: JS Runtime
-- Express JS: Running Server (using JSON middleware)
-- Docker: Containerization
-- Google Cloud Storage: Object storage
-- Google Cloud Run: Serverless container platform for hosting
+- FFmpeg: Video Processing.
+- Node JS (look at [package.json](Video-PS/package.json)) for versioning and dependencies: JS Runtime.
+- Express JS: Running Server (using JSON middleware).
+- Docker: Containerization.
+- Google Cloud Storage: Object storage.
+- Google Cloud Run: Serverless container platform for hosting.
+- Google Pub Sub for asynchronous messaging and Post endpoint.
+- Next.JS for application development (React Wrapper). See [package.json](yt-web-client/package.json) for dependencies.
 
 More on Node...
 
