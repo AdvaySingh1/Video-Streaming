@@ -13,7 +13,7 @@ Tech Stack:
 
 More on Node...
 
-- V8 is locally downloaded and wrapped with C++ for CLI usage which Node leverages in it's scripts.
+- [V8](https://github.com/v8/v8) is locally downloaded and wrapped with C++ for CLI usage which Node leverages in it's scripts.
 - Dev deps such as type script and it's types will not be used in production.
 - Modules and dependencies are similar. We can also create these so long as they have exports.
 - Package-lock is for the versioning of the dependencies.
