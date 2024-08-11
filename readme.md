@@ -10,6 +10,8 @@ Tech Stack:
 - Google Cloud Run: Serverless container platform for hosting.
 - Google Pub Sub for asynchronous messaging and Post endpoint.
 - Next.JS for application development (React Wrapper). See [package.json](yt-web-client/package.json) for dependencies.
+- Firebase (backend as a service).
+- Firestore (noSQL cloud databases).
 
 More on Node...
 
@@ -44,6 +46,12 @@ LEVELS OF NETWORKING
 
 - Determing if there's a server running on the local device at the specified port
   $lsof -i :<port>
+
+- Express:
+  - Middleware: the format in which the request is received to Express. Express.use() accepts a middleware function to mount. It stores these middleware functions in a stack. Express will use the first middleware function which is able to process the request in the stack.
+  - CORS: cross origin resource service is so that other domains can’t use your API endpoints.
+  - Express.json(), express.static() (for sending static dirs), and cors().
+- API: the application is the backend software. There is an API dir for the web app and it has its endpoints where can either be accessed through the client side buttons which send a request, or manually sending a request ourselves.
 
 More JS in Node context:
 
@@ -89,3 +97,16 @@ Google Pub Sub (Message Queue Like Kafka)
 - Fanning out: multiple subscribers for a publisher.
 - Fanning in: multiple publishers for a subscriber.
 - Many-to-many, and one-to-one (the architecture of our streaming service).
+
+- NextJS
+- Three types of pages: API servers (don't need to be in Next APP, we are using firestore functions), Server side (easier on the client browser which needds to use blink and V8 on response), and "use client" which access client side code.
+- State in next application. State is usually only managed via API endpoints if it has to be persistent though sessions. This is the same for NextJS but we can use state hooks if we only need the state in this session. (Use state hook to edit state and use effect to trigger use state based on dependencies).
+
+Firebase
+
+- Installing firebase. $npm i firebase firstly downloads firebase to local device from the npm registry before adding to node_modules.
+- Firestore (Firebase db)
+  - Rules allow you to define the backend (ex. in API endpoints, only allow edits if userID mateched the userID of val in collection).
+  - This is why it's called backend as a service (BAAS).
+- Firebase Functions
+  - Allow you to define your own backend. Simply creating API endpoints for you Firestore db.

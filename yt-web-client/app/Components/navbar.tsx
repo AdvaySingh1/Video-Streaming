@@ -9,11 +9,12 @@ import { User } from "firebase/auth";
 import SignIn from "./signin";
 
 export default function Navbar() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null); // setUser is the onClick function
 
+  // set up on mount. Set up getAuthStateChangeHelper.
   useEffect(() => {
     const unsubscribe = getAuthStateChangeHelper((user) => {
-      setUser(user);
+      setUser(user); // either signOut or signIn with user. This is used by getAuthChange and will be stored in the server.
     });
 
     return () => unsubscribe(); // if only unsubscribe, it will execute unsub in the first place
