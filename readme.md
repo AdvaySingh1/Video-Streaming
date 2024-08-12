@@ -63,8 +63,9 @@ Docker: https://docs.docker.com/guides/docker-overview/
 
 - [Dockerfile](https://docs.docker.com/reference/dockerfile/)
 - [Docker CLI](https://docs.docker.com/reference/cli/docker/container/cp/)
+- Docker Compose is for running the API service and Front end as two separate docker containers with different dependencies.
 - [Docker API](https://docs.docker.com/engine/api/sdk/)
-- Dokerd: the docker daemon which runs in the background allowing you to images.
+- Dokerd: the docker daemon which runs in the background allowing you to pull images.
   - [CLI](https://docs.docker.com/reference/cli/dockerd/)
 
 Google Cloud Storage
@@ -108,5 +109,6 @@ Firebase
 - Firestore (Firebase db)
   - Rules allow you to define the backend (ex. in API endpoints, only allow edits if userID mateched the userID of val in collection).
   - This is why it's called backend as a service (BAAS).
-- Firebase Functions
+- Firebase Functions (FAAS Function as a Service)
   - Allow you to define your own backend. Simply creating API endpoints for you Firestore db.
+  - Server-less DB oftentimes come with BAAS which is backend logic as a service. FAAS is complementary to BAAS, some are specific like firestore functions and some are generally like AWS Lambda or GC functions.
