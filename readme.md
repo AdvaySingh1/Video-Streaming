@@ -5,13 +5,14 @@ Tech Stack:
 - FFmpeg: Video Processing.
 - Node JS (look at [package.json](Video-PS/package.json)) for versioning and dependencies: JS Runtime.
 - Express JS: Running Server (using JSON middleware).
-- Docker: Containerization.
+- Docker: Containerization. (Didn't need Docker compose as the [API service](yt-api-service) is serverless functions).
 - Google Cloud Storage: Object storage.
 - Google Cloud Run: Serverless container platform for hosting.
 - Google Pub Sub for asynchronous messaging and Post endpoint.
 - Next.JS for application development (React Wrapper). See [package.json](yt-web-client/package.json) for dependencies.
-- Firebase (backend as a service).
-- Firestore (noSQL cloud databases).
+- Firebase (backend as a service, serverless).
+- Firestore (noSQL serveless databases with BAAS).
+- Firestore functions (serverless, scalable, FAAS).
 
 More on Node...
 
@@ -103,12 +104,13 @@ Google Pub Sub (Message Queue Like Kafka)
 - Three types of pages: API servers (don't need to be in Next APP, we are using firestore functions), Server side (easier on the client browser which needds to use blink and V8 on response), and "use client" which access client side code.
 - State in next application. State is usually only managed via API endpoints if it has to be persistent though sessions. This is the same for NextJS but we can use state hooks if we only need the state in this session. (Use state hook to edit state and use effect to trigger use state based on dependencies).
 
-Firebase
+Firebase: Aspect of Google Cloud (after was aquired) and is Serverles.
 
 - Installing firebase. $npm i firebase firstly downloads firebase to local device from the npm registry before adding to node_modules.
-- Firestore (Firebase db)
+- Firestore (Firebase db) is a serverless database.
   - Rules allow you to define the backend (ex. in API endpoints, only allow edits if userID mateched the userID of val in collection).
-  - This is why it's called backend as a service (BAAS).
+  - This is why it's called backend as a service (BAAS). (Collections vs Google Storage which is flat).
 - Firebase Functions (FAAS Function as a Service)
   - Allow you to define your own backend. Simply creating API endpoints for you Firestore db.
   - Server-less DB oftentimes come with BAAS which is backend logic as a service. FAAS is complementary to BAAS, some are specific like firestore functions and some are generally like AWS Lambda or GC functions.
+  - FAAS: Serverless, scalable API endpoints defined by cloud provider. These backend servers lead to an event driven architecture.
